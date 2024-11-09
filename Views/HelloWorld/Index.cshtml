@@ -1,0 +1,14 @@
+@{
+    ViewData["Title"] = "Movie List"; // ViewData["Title"] = "Index"; // original 
+}
+<!-- #region
+The title and <h2> element are slightly different so it's clear which part of the code changes the display.
+ViewData["Title"] = "Movie List"; in the code above sets the Title property of the ViewData dictionary to "Movie List".
+The Title property is used in the <title> HTML element in the layout page (_Layout.cshtml):
+<title>@ViewData["Title"] - Movie App</title>
+-->
+
+<h2>My Movie List</h2> <!-- <h2>Index</h2> -->
+
+<p>Hello from our View Template!</p>
+

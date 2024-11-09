@@ -1,0 +1,64 @@
+/*
+PART 2, ADD A CONTROLLER TO AN ASP.NET CORE MVC APP
+THEORY:
+The Model-View-Controller (MVC) architectural pattern separates an app into three main components: Model, View, and Controller.
+The MVC pattern helps you create apps that are more testable and easier to update than traditional monolithic apps.
+MVC-based apps contain:
+Models: Classes that represent the data of the app. 
+-The model classes use validation logic to enforce business rules for that data.
+-Typically, model objects retrieve and store model state in a database.
+-In this tutorial, a Movie model retrieves movie data from a database, provides it to the view or updates it.
+-Updated data is written to a database.
+Views:
+-Views are the components that display the app's user interface (UI).
+-Generally, this UI displays the model data.
+Controllers: Classes that:
+-Handle browser requests.
+-Retrieve model data.
+-Call view templates that return a response.
+In an MVC app, the view only displays information. The controller handles and responds to user input and interaction.
+For example, the controller handles URL segments and query-string values, and passes these values to the model.
+The model might use these values to query the database. For example:
+https://localhost:5001/Home/Privacy: specifies the Home controller and the Privacy action.
+https://localhost:5001/Movies/Edit/5: is a request to edit the movie with ID=5 using the Movies controller and the Edit action, which are detailed later in the tutorial.
+Route data is explained later in the tutorial.
+The MVC architectural pattern separates an app into three main groups of components: Models, Views, and Controllers.
+This pattern helps to achieve separation of concerns: The UI logic belongs in the view. Input logic belongs in the controller. Business logic belongs in the model.
+This separation helps manage complexity when building an app, because it enables work on one aspect of the implementation at a time without impacting the code of another.
+For example, you can work on the view code without depending on the business logic code.
+These concepts are introduced and demonstrated in this tutorial series while building a movie app.
+The MVC project contains folders for the Controllers and Views.
+
+PRACTICE:
+1. Add a controller (Visual Studio Code):
+a. Select the EXPLORER icon and then control-click (right-click) Controllers > New File and name the new file HelloWorldController.cs.
+i. Alternatively, click once on the Controllers folder, and click on the new file icon next to MVCMOVIE at the root ...
+ii. SEE COPIED CODE (in C#) AND COMMENTS IN Controllers/HelloWorldController.cs
+2. Run the app without the debugger by pressing Ctrl+F5 (Windows) or ⌘+F5 (macOS).
+a. Append /HelloWorld to the path in the address bar. The Index method returns a string.
+i. MVC invokes controller classes, and the action methods within them, depending on the incoming URL.
+ii. The default URL routing logic used by MVC, uses a format like this to determine what code to invoke: /[Controller]/[ActionName]/[Parameters]
+iii. The routing format is set in the /Program.cs file (in C#; SEE COMMENTS):
+b. Browse to: https://localhost:{PORT}/HelloWorld/Welcome. Replace {PORT} with your port number.
+i. The Welcome method runs and returns the string
+ii. This is the Welcome action method.... For this URL, the controller is HelloWorld and Welcome is the action method.
+iii. You haven't used the [Parameters] part of the URL yet.
+3. Modify the code to pass some parameter information from the URL to the controller.
+a. For example, /HelloWorld/Welcome?name=Rick&numtimes=4. (SEE COMMENTS IN /Controllers/HelloWorldController.cs)
+4. Run the app and browse to: https://localhost:{PORT}/HelloWorld/Welcome?name=Rick&numtimes=4. Replace {PORT} with your port number.
+a. Try different values for name and numtimes in the URL. 
+b. The MVC model binding system automatically maps the named parameters from the query string to parameters in the method.
+c. See Model Binding for more information.
+d. NOTE: The URL segment Parameters isn't used.
+e. NOTE: The name and numTimes parameters are passed in the query string.
+f. NOTE: The ? (question mark) in the above URL is a separator, and the query string follows.
+g. NOTE: The & character separates field-value pairs.
+3. Modify the code to replace the Welcome method in /Controllers/HelloWorldController.cs(SEE COMMENTS):
+4. Run the app and enter the following URL: https://localhost:{PORT}/HelloWorld/Welcome/3?name=Rick; In the preceding URL:
+a. The third URL segment matched the route parameter id.
+b. The Welcome method contains a parameter id that matched the URL template in the MapControllerRoute method in /Program.cs
+i. SEE ADDITIONAL COMMENTS IN /Program.cs
+c. The trailing ? starts the query string.
+
+NEXT: Add a View ...
+*/

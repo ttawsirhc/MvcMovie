@@ -1,0 +1,132 @@
+/*
+PART 3, ADD A VIEW TO AN ASP.NET CORE MVC APP
+In this article: Add a view; Change views and layout pages; Change the title, footer, and menu link in the layout file; Passing Data from the Controller to the View
+
+THEORY:
+In this section, you modify the HelloWorldController class to use Razor view files.
+This cleanly encapsulates the process of generating HTML responses to a client.
+View templates are created using Razor. Razor-based view templates: Have a .cshtml file extension; Provide an elegant way to create HTML output with C#.
+
+PRACTICE:
+1. SEE COMMENTS REGARDING THE INDEX METHOD IN /Controllers/HelloWorldController.cs
+2. Add a view (Visual Studio Code):
+a. Add an Index view for the HelloWorldController:
+i. Add a new folder named Views/HelloWorld.
+ii. Add a new file to the Views/HelloWorld folder, and name it Index.cshtml.
+iii. SEE COPIED CODE (in C#) AND COMMENTS IN /Views/HelloWorld/Index.cshtml
+3. Navigate to https://localhost:{PORT}/HelloWorld:
+a. The Index method in the HelloWorldController ran the statement return View();, which specified that the method should use a view template file to render a response to the browser.
+b. A view template file name wasn't specified, so MVC defaulted to using the default view file.
+i. When the view file name isn't specified, the default view is returned. 
+ii. The default view has the same name as the action method, Index in this example.
+iii. The view template /Views/HelloWorld/Index.cshtml is used.
+c. Change views and layout pages: Select the menu links MvcMovie, Home, and Privacy.
+i. Each page shows the same menu layout. The menu layout is implemented in the Views/Shared/_Layout.cshtml file.
+4. Open the Views/Shared/_Layout.cshtml file. (SEE COMMENTS)
+a. Layout templates allow:
+i. Specifying the HTML container layout of a site in one place.
+ii. Applying the HTML container layout across multiple pages in the site.
+b. Find the @RenderBody() line. (SEE COMMENTS IN Views/Shared/_Layout.cshtml)
+c. Change the title, footer, and menu link in the layout file: Replace the content of the Views/Shared/_Layout.cshtml file with the markup IN COMMENTS.
+i. This code: The markup commented in Views/Shared/_Layout.cshtml made the following changes:
+ii. There are three occurrences of MvcMovie to Movie App.
+iii. The anchor element <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">MvcMovie</a> to <a class="navbar-brand" asp-controller="Movies" asp-action="Index">Movie App</a>.
+iv. In the markup, the asp-area="" anchor Tag Helper attribute and attribute value was omitted because this app isn't using Areas.
+v. NOTE: The Movies controller hasn't been implemented. At this point, the Movie App link isn't functional.
+vi. Save the changes and select the Privacy link. Notice how the title on the browser tab displays Privacy Policy - Movie App instead of Privacy Policy - MvcMovie
+5. Privacy tab: Select the Home link. Notice that the title and anchor text display Movie App.
+a. The changes were made once in the layout template and all pages on the site reflect the new link text and new title.
+6. Examine the Views/_ViewStart.cshtml file:
+a. The Views/_ViewStart.cshtml file brings in the Views/Shared/_Layout.cshtml file to each view.
+b. The Layout property can be used to set a different layout view, or set it to null so no layout file will be used.
+7. Open the Views/HelloWorld/Index.cshtml view file.
+a. Change the title and <h2> element (SEE COMMENTS)
+B. Save the change and navigate to https://localhost:{PORT}/HelloWorld.
+C. Notice that the following have changed: Browser title; Primary heading; Secondary headings.
+D. If there are no changes in the browser, it could be cached content that is being viewed.
+E. Press Ctrl+F5 in the browser to force the response from the server to be loaded. 
+F. The browser title is created with ViewData["Title"] we set in the Index.cshtml view template ...
+G. ... and the additional "- Movie App" added in the layout file.
+H. The content in the Index.cshtml view template is merged with the Views/Shared/_Layout.cshtml view template.
+I. A single HTML response is sent to the browser.
+J. Layout templates make it easy to make changes that apply across all of the pages in an app. To learn more, see Layout.
+[mOVIE lIST vIEW]
+8. The small bit of "data", the "Hello from our View Template!" message, is hard-coded however.
+9. The MVC application has a "V" (view), a "C" (controller), but no "M" (model) yet.
+
+PASSING DATA FROM THE CONTROLLER TO THE VIEW
+1. Controller actions are invoked in response to an incoming URL request.
+2. A controller class is where the code is written that handles the incoming browser requests.
+3. The controller retrieves data from a data source and decides what type of response to send back to the browser.
+4. View templates can be used from a controller to generate and format an HTML response to the browser.
+5. Controllers are responsible for providing the data required in order for a view template to render a response.
+6. View templates should not:
+A. Do business logic
+B. Interact with a database directly.
+
+A view template should work only with the data that's provided to it by the controller. Maintaining this "separation of concerns" helps keep the code:
+
+    Clean.
+    Testable.
+    Maintainable.
+
+Currently, the Welcome method in the HelloWorldController class takes a name and an ID parameter and then outputs the values directly to the browser.
+
+Rather than have the controller render this response as a string, change the controller to use a view template instead. The view template generates a dynamic response, which means that appropriate data must be passed from the controller to the view to generate the response. Do this by having the controller put the dynamic data (parameters) that the view template needs in a ViewData dictionary. The view template can then access the dynamic data.
+
+In HelloWorldController.cs, change the Welcome method to add a Message and NumTimes value to the ViewData dictionary.
+
+The ViewData dictionary is a dynamic object, which means any type can be used. The ViewData object has no defined properties until something is added. The MVC model binding system automatically maps the named parameters name and numTimes from the query string to parameters in the method. The complete HelloWorldController:
+C#
+
+using Microsoft.AspNetCore.Mvc;
+using System.Text.Encodings.Web;
+
+namespace MvcMovie.Controllers;
+
+public class HelloWorldController : Controller
+{
+    public IActionResult Index()
+    {
+        return View();
+    }
+    public IActionResult Welcome(string name, int numTimes = 1)
+    {
+        ViewData["Message"] = "Hello " + name;
+        ViewData["NumTimes"] = numTimes;
+        return View();
+    }
+}
+
+The ViewData dictionary object contains data that will be passed to the view.
+
+Create a Welcome view template named Views/HelloWorld/Welcome.cshtml.
+
+You'll create a loop in the Welcome.cshtml view template that displays "Hello" NumTimes. Replace the contents of Views/HelloWorld/Welcome.cshtml with the following:
+CSHTML
+
+@{
+    ViewData["Title"] = "Welcome";
+}
+
+<h2>Welcome</h2>
+
+<ul>
+    @for (int i = 0; i < (int)ViewData["NumTimes"]!; i++)
+    {
+        <li>@ViewData["Message"]</li>
+    }
+</ul>
+
+Save your changes and browse to the following URL:
+
+https://localhost:{PORT}/HelloWorld/Welcome?name=Rick&numtimes=4
+
+Data is taken from the URL and passed to the controller using the MVC model binder. The controller packages the data into a ViewData dictionary and passes that object to the view. The view then renders the data as HTML to the browser.
+
+Privacy view showing a Welcome label and the phrase Hello Rick shown four times
+
+In the preceding sample, the ViewData dictionary was used to pass data from the controller to a view. Later in the tutorial, a view model is used to pass data from a controller to a view. The view model approach to passing data is preferred over the ViewData dictionary approach.
+
+In the next tutorial, a database of movies is created.
+*/
